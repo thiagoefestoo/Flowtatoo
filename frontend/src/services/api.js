@@ -1,14 +1,6 @@
 import { clearSession, getToken } from './auth';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
-const API_ORIGIN = API_BASE_URL.replace(/\/api\/?$/, '');
-
-export function getApiFileUrl(filePath) {
-  if (!filePath) return '#';
-  if (/^https?:\/\//i.test(filePath)) return filePath;
-
-  return `${API_ORIGIN}${filePath.startsWith('/') ? filePath : `/${filePath}`}`;
-}
 
 export async function apiRequest(endpoint, options = {}) {
   const {
@@ -18,10 +10,8 @@ export async function apiRequest(endpoint, options = {}) {
   } = options;
 
   const token = getToken();
-  const isFormData = fetchOptions.body instanceof FormData;
-
   const headers = {
-    ...(isFormData ? {} : { 'Content-Type': 'application/json; charset=utf-8' }),
+    'Content-Type': 'application/json; charset=utf-8',
     ...customHeaders,
   };
 

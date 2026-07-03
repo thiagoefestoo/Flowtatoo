@@ -9,6 +9,8 @@ import {
   subscribeToAlertChanges,
 } from '../services/alertStorage';
 
+const ALERT_REFRESH_MS = 120000;
+
 function formatDueAt(value) {
   if (!value) return '';
   const date = new Date(value);
@@ -24,28 +26,47 @@ function formatDueAt(value) {
 function AlertBell() {
   const navigate = useNavigate();
   const wrapperRef = useRef(null);
+  const requestInFlightRef = useRef(false);
   const [open, setOpen] = useState(false);
   const [alerts, setAlerts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [readIds, setReadIds] = useState(() => getReadAlertIds());
 
   async function loadAlerts() {
+    if (requestInFlightRef.current || document.hidden) return;
+
     try {
+      requestInFlightRef.current = true;
       setLoading(true);
       const result = await apiRequest('/alerts/details');
       setAlerts(result.data?.alerts || []);
     } catch (error) {
       setAlerts([]);
     } finally {
+      requestInFlightRef.current = false;
       setLoading(false);
     }
   }
 
   useEffect(() => {
     loadAlerts();
-    const interval = window.setInterval(loadAlerts, 60000);
-    return () => window.clearInterval(interval);
+
+    const interval = window.setInterval(loadAlerts, ALERT_REFRESH_MS);
+    const handleVisibilityChange = () => {
+      if (!document.hidden) loadAlerts();
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      window.clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
   }, []);
+
+  useEffect(() => {
+    if (open && alerts.length === 0) loadAlerts();
+  }, [open]);
 
   useEffect(() => subscribeToAlertChanges(() => setReadIds(getReadAlertIds())), []);
 

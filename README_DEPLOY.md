@@ -1,49 +1,58 @@
 # Flowtatoo — Deploy
 
-Base de deploy para o Flowtatoo, sistema de RH/PeopleOps com frontend React + Vite e backend Node + Express.
+Aplicativo mobile para gestão de estúdio de tatuagem, com frontend React/Vite e backend Node/Express.
 
-## Backend
+## Backend no Render
 
-Configure as variáveis do backend no provedor de hospedagem:
+Variáveis:
 
 ```env
 DATABASE_URL=sua_url_postgresql_neon
 JWT_SECRET=troque_esta_chave
-DB_SYNC=true
-CORS_ORIGIN=https://seu-frontend.vercel.app
+JWT_EXPIRES_IN=8h
+DB_SYNC=false
+CORS_ORIGIN=https://flowtatoo.vercel.app
+NODE_ENV=production
 ```
 
-Comandos sugeridos:
+Na primeira publicação desta versão otimizada, use `DB_SYNC=true` somente uma vez para criação dos índices. Depois volte para `false`.
 
-```bash
-cd backend
-npm install
-npm run start
+Configuração:
+
+```text
+Root Directory: backend
+Build Command: npm ci --omit=dev
+Start Command: npm start
+Health Check: /api/health
 ```
 
-Para criar dados demonstrativos e o usuário inicial:
+## Frontend na Vercel
 
-```bash
-npm run seed:demo
-```
-
-## Frontend
-
-Configure a URL da API no frontend:
+Variável:
 
 ```env
 VITE_API_URL=https://sua-api.onrender.com/api
 ```
 
-Comandos:
+Comandos locais:
 
-```bash
+```powershell
 cd frontend
-npm install
-npm run build
+pnpm install
+pnpm run build
+vercel --prod --force
 ```
 
-## Login inicial de demonstração
+O `vercel.json` já contém o build com pnpm, a pasta `dist` e a regra de navegação para React Router.
+
+## Administrador
+
+```powershell
+cd backend
+node scripts/create-admin.js
+```
+
+Login padrão do script:
 
 - E-mail: `admin@flowtatoo.com`
 - Senha: `Admin@12345`

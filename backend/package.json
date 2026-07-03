@@ -9,10 +9,7 @@
     "check": "node scripts/check-syntax.js",
     "lint": "node scripts/check-syntax.js",
     "build": "node scripts/check-syntax.js",
-    "encoding:check": "node scripts/check-encoding.js",
-    "encoding:repair": "node scripts/repair-encoding.js",
-    "encoding:repair:dry": "node scripts/repair-encoding.js --dry-run",
-    "seed:demo": "node scripts/seed-flowtatoo-demo.js",
+    "seed:demo": "node scripts/seed-flowtatoo-tattoo-volume.js 40",
     "seed:volume": "node scripts/seed-flowtatoo-tattoo-volume.js",
     "seed:tattoo": "node scripts/seed-flowtatoo-tattoo-volume.js"
   },
@@ -26,7 +23,6 @@
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "multer": "^2.2.0",
     "pg": "^8.21.0",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.8"
@@ -35,6 +31,6 @@
     "nodemon": "^3.1.14"
   },
   "engines": {
-    "node": ">=20"
+    "node": "24.x"
   }
 }

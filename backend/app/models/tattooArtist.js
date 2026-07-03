@@ -15,6 +15,10 @@ const TattooArtist = sequelize.define('TattooArtist', {
 }, {
   tableName: 'flowtattoo_artists',
   timestamps: true,
+  indexes: [
+    { fields: ['name'] },
+    { fields: ['status'] },
+  ],
 });
 
 module.exports = TattooArtist;

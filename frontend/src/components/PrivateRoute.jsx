@@ -56,7 +56,7 @@ function PrivateRoute({ children }) {
     return () => {
       active = false;
     };
-  }, [location.pathname]);
+  }, []);
 
   if (checking) {
     return (

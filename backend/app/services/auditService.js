@@ -1,24 +1,19 @@
-const AuditLog = require('../models/auditLog');
+async function registerAuditLog(payload) {
+  if (process.env.AUDIT_ENABLED !== 'true') return null;
 
-async function registerAuditLog({
-  entityType,
-  entityId,
-  action,
-  description,
-  userId,
-  metadata = null,
-  transaction = null,
-}) {
+  // Carrega o modelo apenas quando a auditoria estiver habilitada.
+  const AuditLog = require('../models/auditLog');
+
   return AuditLog.create(
     {
-      entityType,
-      entityId,
-      action,
-      description,
-      userId,
-      metadata,
+      entityType: payload.entityType,
+      entityId: payload.entityId,
+      action: payload.action,
+      description: payload.description,
+      userId: payload.userId,
+      metadata: payload.metadata ?? null,
     },
-    transaction ? { transaction } : undefined
+    payload.transaction ? { transaction: payload.transaction } : undefined
   );
 }
 

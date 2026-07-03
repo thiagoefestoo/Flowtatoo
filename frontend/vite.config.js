@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 
 function utf8HtmlHeaders() {
   return {
-    name: 'flowcrm-utf8-html-headers',
+    name: 'flowtatoo-utf8-html-headers',
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
         if (req.url === '/' || req.url?.endsWith('.html')) {

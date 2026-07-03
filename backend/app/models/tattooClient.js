@@ -19,6 +19,12 @@ const TattooClient = sequelize.define('TattooClient', {
 }, {
   tableName: 'flowtattoo_clients',
   timestamps: true,
+  indexes: [
+    { fields: ['name'] },
+    { fields: ['phone'] },
+    { fields: ['status'] },
+    { fields: ['birth_date'] },
+  ],
 });
 
 module.exports = TattooClient;

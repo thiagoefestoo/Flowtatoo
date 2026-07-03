@@ -1,4 +1,4 @@
-﻿const express = require('express');
+const express = require('express');
 
 const sequelize = require('../../config/db');
 

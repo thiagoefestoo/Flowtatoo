@@ -6,6 +6,8 @@ const TattooArtist = require('../models/tattooArtist');
 
 const ACTIVE_STATUSES = ['orcamento', 'aguardando_sinal', 'agendado', 'confirmado', 'em_atendimento', 'reagendado'];
 const SEVERITY_ORDER = { urgent: 0, warning: 1, info: 2, success: 3 };
+const ALERT_CACHE_TTL_MS = 15000;
+let alertCache = { expiresAt: 0, data: null };
 
 function pad(value) {
   return String(value).padStart(2, '0');
@@ -119,6 +121,9 @@ function buildConflicts(appointments) {
 }
 
 async function getAlertData() {
+  const now = Date.now();
+  if (alertCache.data && alertCache.expiresAt > now) return alertCache.data;
+
   const todayDate = new Date();
   todayDate.setHours(0, 0, 0, 0);
 
@@ -137,9 +142,14 @@ async function getAlertData() {
         appointmentDate: { [Op.between]: [sevenDaysAgo, thirtyDays] },
         status: { [Op.ne]: 'cancelado' },
       },
+      attributes: [
+        'id', 'clientId', 'artistId', 'title', 'appointmentDate', 'startTime', 'endTime',
+        'estimatedMinutes', 'price', 'paidAmount', 'paymentStatus', 'status',
+        'confirmationStatus', 'priority', 'careInstructionsSent',
+      ],
       include: [
-        { model: TattooClient, as: 'client' },
-        { model: TattooArtist, as: 'artist' },
+        { model: TattooClient, as: 'client', attributes: ['id', 'name'] },
+        { model: TattooArtist, as: 'artist', attributes: ['id', 'name'] },
       ],
       order: [['appointmentDate', 'ASC'], ['startTime', 'ASC']],
     }),
@@ -148,6 +158,7 @@ async function getAlertData() {
         status: { [Op.ne]: 'inativo' },
         birthDate: { [Op.ne]: null },
       },
+      attributes: ['id', 'name', 'birthDate'],
       order: [['name', 'ASC']],
     }),
   ]);
@@ -294,7 +305,7 @@ async function getAlertData() {
 
   const countType = (type) => uniqueAlerts.filter((alert) => alert.type === type).length;
 
-  return {
+  const result = {
     generatedAt: new Date().toISOString(),
     summary: {
       total: uniqueAlerts.length,
@@ -309,6 +320,13 @@ async function getAlertData() {
     },
     alerts: uniqueAlerts,
   };
+
+  alertCache = {
+    data: result,
+    expiresAt: Date.now() + ALERT_CACHE_TTL_MS,
+  };
+
+  return result;
 }
 
 async function getAlertsSummary(req, res) {

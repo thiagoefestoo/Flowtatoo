@@ -32,6 +32,14 @@ const TattooAppointment = sequelize.define('TattooAppointment', {
 }, {
   tableName: 'flowtattoo_appointments',
   timestamps: true,
+  indexes: [
+    { fields: ['appointment_date'] },
+    { fields: ['status'] },
+    { fields: ['payment_status'] },
+    { fields: ['confirmation_status'] },
+    { fields: ['client_id'] },
+    { fields: ['artist_id', 'appointment_date'] },
+  ],
 });
 
 TattooAppointment.belongsTo(TattooClient, { foreignKey: 'clientId', as: 'client' });

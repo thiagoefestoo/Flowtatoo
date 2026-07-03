@@ -52,8 +52,8 @@ Depois rode:
 
 ```bash
 cd frontend
-npm install
-npm run dev
+pnpm install
+pnpm run dev
 ```
 
 Abra o endereço exibido pelo Vite, geralmente:

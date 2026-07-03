@@ -2541,3 +2541,27 @@ td {
   .tattoo-alert-summary-grid span { font-size: 8px; }
   .tattoo-alert-summary-grid strong { font-size: 21px; }
 }
+
+
+/* Carregamento leve entre módulos carregados sob demanda */
+.tattoo-route-loader {
+  min-height: 42vh;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 12px;
+  color: #1d4ed8;
+}
+
+.tattoo-route-loader span {
+  width: 34px;
+  height: 34px;
+  border: 3px solid rgba(37, 99, 235, 0.18);
+  border-top-color: #2563eb;
+  border-radius: 50%;
+  animation: tattoo-route-spin 0.75s linear infinite;
+}
+
+@keyframes tattoo-route-spin {
+  to { transform: rotate(360deg); }
+}
