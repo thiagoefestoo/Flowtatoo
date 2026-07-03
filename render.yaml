@@ -1,0 +1,25 @@
+﻿services:
+  - type: web
+    name: flowtatoo-api
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: DATABASE_URL
+        sync: false
+      - key: DB_SYNC
+        value: "true"
+      - key: JWT_SECRET
+        sync: false
+      - key: JWT_EXPIRES_IN
+        value: 8h
+      - key: SETUP_ADMIN_KEY
+        sync: false
+      - key: CORS_ORIGIN
+        sync: false
